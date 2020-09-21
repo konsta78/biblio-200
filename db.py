@@ -36,31 +36,31 @@ def create_db(database):
     database.commit()
 
 
-def insert_to_db(database):
-    """
-    Добавление данных в библиотеку
-    :param database: база данных
-    """
-    cursor = database.cursor()
-    cursor.execute("INSERT INTO books (name, author, genre, year, amount) "
-                   "VALUES('Война и мир', 'Лев Толстой', 'Роман', 1865, 3)")
-    database.commit()
+# def insert_to_db(database):
+#     """
+#     Добавление данных в библиотеку
+#     :param database: база данных
+#     """
+#     cursor = database.cursor()
+#     cursor.execute("INSERT INTO books (name, author, genre, year, amount) "
+#                    "VALUES('Война и мир', 'Лев Толстой', 'Роман', 1865, 3)")
+#     database.commit()
 
 
-def read_all_from_db(database):
-    """
-    Получение всех данных из базы
-    :param database: база данных
-    :return: список кортежей записей
-    """
-    cursor = database.cursor()
-    cursor.execute("""
-        SELECT * 
-        FROM books 
-        ORDER BY id
-        """)
-    data = cursor.fetchall()
-    return data
+# def read_all_from_db(database):
+#     """
+#     Получение всех данных из базы
+#     :param database: база данных
+#     :return: список кортежей записей
+#     """
+#     cursor = database.cursor()
+#     cursor.execute("""
+#         SELECT *
+#         FROM books
+#         ORDER BY id
+#         """)
+#     data = cursor.fetchall()
+#     return data
 
 
 def read_author_from_db(database):
@@ -71,8 +71,8 @@ def read_author_from_db(database):
     """
     cursor = database.cursor()
     cursor.execute("""
-        SELECT author 
-        FROM books 
+        SELECT author
+        FROM books
         """)
     data = cursor.fetchall()
     return data
@@ -86,8 +86,8 @@ def read_genre_from_db(database):
     """
     cursor = database.cursor()
     cursor.execute("""
-        SELECT genre 
-        FROM books 
+        SELECT genre
+        FROM books
         """)
     data = cursor.fetchall()
     return data
