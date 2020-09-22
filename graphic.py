@@ -32,7 +32,7 @@ class Root(Tk):
                         font='arial 16', width=12, command=f.show_catalog, state='disabled')
         self.but_catalog.pack()
         self.but_add = Button(self.frame_menu, text="Добавить", activeforeground="blue",
-                        font='arial 16', width=12, state='disabled')
+                        font='arial 16', width=12, command=f.new_record, state='disabled')
         self.but_add.pack()
         self.but_del = Button(self.frame_menu, text="Удалить", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
@@ -76,3 +76,34 @@ class Root(Tk):
         self.main_text_field_on()
         self.main_text_field_insert("База успешно загружена!")
         self.main_text_field_off()
+
+
+class PopUpWindow(Toplevel):
+    def __init__(self, root, width, height):
+        super().__init__()
+        self.grab_set()
+        nr_x = root.winfo_rootx() + root.winfo_reqwidth() // 2
+        nr_y = root.winfo_rooty() + root.winfo_reqheight() // 2
+        self.geometry(f'{width}x{height}+{nr_x - width // 2}+{nr_y - height // 2}')
+        self.overrideredirect(True)
+
+    def pop_up_add_record(self):
+        lbl1 = Label(self, text="Добавление новой книги:",
+                     font='arial 20 bold', pady=10).grid(row=0, columnspan=2, sticky=W + E)
+        lbl2 = Label(self, text="Название: ", font='arial 14').grid(row=1, column=0, sticky=W, padx=10, pady=2)
+        new_name = Entry(self, width=40)
+        new_name.grid(row=1, column=1)
+        lbl3 = Label(self, text="Автор: ", font='arial 14').grid(row=2, column=0, sticky=W, padx=10, pady=2)
+        new_author = Entry(self, width=40)
+        new_author.grid(row=2, column=1)
+        lbl4 = Label(self, text="Жанр: ", font='arial 14').grid(row=3, column=0, sticky=W, padx=10, pady=2)
+        new_genre = Entry(self, width=40)
+        new_genre.grid(row=3, column=1)
+        lbl4 = Label(self, text="Год создания: ", font='arial 14').grid(row=4, column=0, sticky=W, padx=10, pady=2)
+        new_year = Entry(self, width=4)
+        new_year.grid(row=4, column=1, sticky=W)
+        btn1 = Button(self, text="Сохранить", activeforeground="blue", command=f.new_record,
+                      font='arial 16', width=10).grid(row=5, column=0, padx=10, pady=2)
+        btn2 = Button(self, text="Закрыть", activeforeground="blue", command=self.destroy,
+                      font='arial 16', width=10).grid(row=5, column=1, sticky=E, pady=2)
+        return new_name.get(), new_author.get(), new_genre.get(), new_year.get()

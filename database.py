@@ -39,6 +39,22 @@ class DataBase:
         data = self.cursor.fetchall()
         return data
 
+    def add_new_record(self, name, author, genre, year, amount):
+        """
+         Добавление новой записи по введенным данным
+         :param name: Название книги
+         :param author: Автор
+         :param genre: Жанр
+         :param year: Год издания
+         :param amount: Кол-во экземпляров
+         """
+        entities = (name, author, genre, year, amount)
+        self.cursor.execute(
+            '''INSERT INTO books(name, author, genre, year, amount) 
+            VALUES(?, ?, ?, ?, ?)
+            ''', entities)
+        self.database.commit()
+
     def database_close(self):
         self.cursor.close()
 

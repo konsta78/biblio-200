@@ -1,6 +1,6 @@
 from tkinter import filedialog as fd
 from database import DataBase
-from graphic import Root
+from graphic import Root, PopUpWindow
 
 
 def create_main_window():
@@ -36,6 +36,24 @@ def show_catalog():
     for item in db.read_all_from_db():
         root.main_text_field_insert(f'id{item[0]} - "{item[1]}", {item[2]}, {item[3]}, {item[4]} год, {item[5]} шт.\n')
     root.main_text_field_off()
+
+
+def new_record():
+    """
+    Отображение доп. окна для внесения новой записи в библиотеку -
+    ннопка 'Добавить'
+    """
+
+    def save_nr():
+        """
+        Закрытие доп. окна и внесение новой записи в базу данных
+        """
+        db.add_new_record(db, new_name, new_author, new_genre, new_year, 5)
+        nr_window.destroy()
+        show_welcome()
+
+    nr_window = PopUpWindow(root, 500, 220)
+    new_name, new_author, new_genre, new_year = nr_window.pop_up_add_record()
 
 
 def biblio_close():
