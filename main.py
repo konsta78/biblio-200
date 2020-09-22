@@ -7,26 +7,9 @@
 и обеспечить интерфейс взаимодействия пользователя с библиотекой.
 """
 
-from tkinter import *
-from tkinter import filedialog as fd
-from database import DataBase
-from graphic import Root
-
-
-WIDTH = 980
-HEIGHT = 500
-
-
-def create_main_window():
-    """
-    Создание основного окна программы
-    """
-    root = Root()
-    return root
+import functions as f
 
 
 if __name__ == "__main__":
-    db = None
-    root = create_main_window()
-    root.mainloop()
+    f.create_main_window()
 

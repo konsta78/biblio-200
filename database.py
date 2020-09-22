@@ -49,5 +49,5 @@ if __name__ == "__main__":
     for item in db.read_from_database_by_filter('author'):
         print(item[0])
 
-    #print(db.read_from_database_by_filter())
+    print(db.read_from_database_by_filter('author'))
     db.database_close()

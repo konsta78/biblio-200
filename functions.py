@@ -1,5 +1,12 @@
 from tkinter import filedialog as fd
 from database import DataBase
+from graphic import Root
+
+
+def create_main_window():
+    global root
+    root = Root()
+    root.mainloop()
 
 
 def load_database():
@@ -7,32 +14,37 @@ def load_database():
     global db
     if file_name:
         db = DataBase(file_name)
-        print("база открыта")
-        # but_m0.configure(state='normal')
-        # but_m1.configure(state='normal')
-        # but_m2.configure(state='normal')
-        # but_m3.configure(state='normal')
-        # but_m4.configure(state='normal')
-        # but_m5.configure(state='normal')
-        # but_m6.configure(state='normal')
-        # text1.configure(state='normal')
-        # text1.delete(1.0, 'end')
-        # text1.insert('end', "База успешно загружена!")
-        # text1.configure(state='disabled')
+        root.update_after_load_database()
 
 
 def show_welcome():
-    pass
+    """
+    Отображение общей информации о библиотеке - кнопка 'В начало'
+    """
+    root.main_text_field_on()
+    root.main_text_field_insert(f'В нашей библиотеке: {len(db.read_all_from_db())} различных книг\n')
+    root.main_text_field_insert(f'Авторов в библиотеке: {len(db.read_from_database_by_filter("author"))}\n')
+    root.main_text_field_insert(f'Жанров в библиотеке: {len(db.read_from_database_by_filter("genre"))}\n')
+    root.main_text_field_off()
 
 
 def show_catalog():
-    pass
+    """
+    Отображение каталога записей в библиотеке - кнопка 'Каталог'
+    """
+    root.main_text_field_on()
+    for item in db.read_all_from_db():
+        root.main_text_field_insert(f'id{item[0]} - "{item[1]}", {item[2]}, {item[3]}, {item[4]} год, {item[5]} шт.\n')
+    root.main_text_field_off()
 
 
 def biblio_close():
     """
     Закрытие основного окна программы
     """
-    if db:
-        db.cursor.close()
-        print("база закрыта")
+    try:
+        if db:
+            db.cursor.close()
+    finally:
+        root.destroy()
+

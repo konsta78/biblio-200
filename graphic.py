@@ -25,32 +25,54 @@ class Root(Tk):
         self.frame_main.pack(side=LEFT, fill=BOTH)
         lbl_head = Label(self.frame_top, text="Добро пожаловать в библиотеку!",
                        font='arial 20 bold', pady=10).pack()
-        but_m0 = Button(self.frame_menu, text="В начало", activeforeground="blue",
+        self.but_start = Button(self.frame_menu, text="В начало", activeforeground="blue",
                         font='arial 16', width=12, command=f.show_welcome, state='disabled')
-        but_m0.pack()
-        but_m1 = Button(self.frame_menu, text="Каталог", activeforeground="blue",
+        self.but_start.pack()
+        self.but_catalog = Button(self.frame_menu, text="Каталог", activeforeground="blue",
                         font='arial 16', width=12, command=f.show_catalog, state='disabled')
-        but_m1.pack()
-        but_m2 = Button(self.frame_menu, text="Добавить", activeforeground="blue",
+        self.but_catalog.pack()
+        self.but_add = Button(self.frame_menu, text="Добавить", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
-        but_m2.pack()
-        but_m3 = Button(self.frame_menu, text="Удалить", activeforeground="blue",
+        self.but_add.pack()
+        self.but_del = Button(self.frame_menu, text="Удалить", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
-        but_m3.pack()
-        but_m4 = Button(self.frame_menu, text="Редактировать", activeforeground="blue",
+        self.but_del.pack()
+        self.but_edit = Button(self.frame_menu, text="Редактировать", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
-        but_m4.pack()
-        but_m5 = Button(self.frame_menu, text="Поиск", activeforeground="blue",
+        self.but_edit.pack()
+        self.but_find = Button(self.frame_menu, text="Поиск", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
-        but_m5.pack()
-        but_m6 = Button(self.frame_menu, text="Сохранить", activeforeground="blue",
+        self.but_find.pack()
+        self.but_save = Button(self.frame_menu, text="Сохранить", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
-        but_m6.pack()
-        but_m7 = Button(self.frame_menu, text="Загрузить", command=f.load_database, activeforeground="blue",
+        self.but_save.pack()
+        self.but_load = Button(self.frame_menu, text="Загрузить", command=f.load_database, activeforeground="blue",
                         font='arial 16', width=12, state='normal')
-        but_m7.pack()
-        but_m8 = Button(self.frame_menu, text="Выйти", command=f.biblio_close, activeforeground="blue",
+        self.but_load.pack()
+        self.but_exit = Button(self.frame_menu, text="Выйти", command=f.biblio_close, activeforeground="blue",
                         font='arial 16', width=12).pack(side=BOTTOM)
 
-        text1 = Text(self.frame_main, wrap=WORD, font="arial 14", bg="lightgray")
-        text1.pack()
+        self.main_text_field = Text(self.frame_main, wrap=WORD, font="arial 14", bg="lightgray")
+        self.main_text_field.pack()
+
+    def main_text_field_on(self):
+        self.main_text_field.configure(state='normal')
+        self.main_text_field.delete(1.0, 'end')
+
+    def main_text_field_off(self):
+        self.main_text_field.configure(state='disabled')
+
+    def main_text_field_insert(self, data_text):
+        self.main_text_field.insert('end', data_text)
+
+    def update_after_load_database(self):
+        self.but_start.configure(state='normal')
+        self.but_catalog.configure(state='normal')
+        self.but_add.configure(state='normal')
+        self.but_del.configure(state='normal')
+        self.but_edit.configure(state='normal')
+        self.but_find.configure(state='normal')
+        self.but_save.configure(state='normal')
+        self.main_text_field_on()
+        self.main_text_field_insert("База успешно загружена!")
+        self.main_text_field_off()
