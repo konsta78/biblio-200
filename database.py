@@ -8,8 +8,8 @@ import sqlite3
 class DataBase:
     def __init__(self, database):
         self.database = database
-        database_connect = sqlite3.connect(self.database)
-        self.cursor = database_connect.cursor()
+        self.database_connect = sqlite3.connect(self.database)
+        self.cursor = self.database_connect.cursor()
 
     def read_all_from_db(self):
         """
@@ -53,7 +53,41 @@ class DataBase:
             '''INSERT INTO books(name, author, genre, year, amount) 
             VALUES(?, ?, ?, ?, ?)
             ''', entities)
-        self.database.commit()
+        self.database_connect.commit()
+
+    def delete_from_database(self, record):
+        """
+        Удаление записи из базы данных
+        :param record: id записи из Combobox
+        """
+        self.cursor.execute("""
+            DELETE FROM books WHERE id=?""", (record,))
+        self.database_connect.commit()
+
+    def get_record(self, record):
+        """
+        Выбор записи из библиотеки по ее id
+        :param record: id записи
+        :return: список (из 1 кортежа) выбранной записи
+        """
+        self.cursor.execute("""
+            SELECT * FROM books WHERE id=?""", (record,))
+        data = self.cursor.fetchall()
+        return data
+
+    def update_record_in_database(self, id_rec, name_rec, author_rec, genre_rec, year_rec):
+        """
+        Редактирование выбранной записи в библиотеке
+        :param id_rec: id выбранной записи
+        :param name_rec: название книги
+        :param author_rec: автор
+        :param genre_rec: жанр
+        :param year_rec: год
+        """
+        self.cursor.execute(
+            '''UPDATE books SET name=?, author=?, genre=?, year=? 
+            WHERE id=?''', (name_rec, author_rec, genre_rec, year_rec, id_rec))
+        self.database_connect.commit()
 
     def database_close(self):
         self.cursor.close()

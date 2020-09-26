@@ -40,20 +40,23 @@ def show_catalog():
 
 def new_record():
     """
-    Отображение доп. окна для внесения новой записи в библиотеку -
-    ннопка 'Добавить'
+    Отображение доп. окна для внесения новой записи в библиотеку - ннопка 'Добавить'
     """
+    PopUpWindow(root, 500, 220).pop_up_add_record(db)
 
-    def save_nr():
-        """
-        Закрытие доп. окна и внесение новой записи в базу данных
-        """
-        db.add_new_record(db, new_name, new_author, new_genre, new_year, 5)
-        nr_window.destroy()
-        show_welcome()
 
-    nr_window = PopUpWindow(root, 500, 220)
-    new_name, new_author, new_genre, new_year = nr_window.pop_up_add_record()
+def delete_record():
+    """
+    Отображение доп. окна для удаления записи из библиотеки - ннопка 'Удалить'
+    """
+    PopUpWindow(root, 500, 140).pop_up_delete_record(db)
+
+
+def edit_record():
+    """
+    Отображение доп. окна для редактирования существующей записи в библиотеке - кнопка 'Редактировать'
+    """
+    PopUpWindow(root, 520, 280).pop_up_update_record(db)
 
 
 def biblio_close():
