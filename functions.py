@@ -2,6 +2,8 @@ from tkinter import filedialog as fd
 from database import DataBase
 from graphic import Root, PopUpWindow
 
+# TODO: 1. При создании новой базы данных необходимо сначала закрыть существующую базу при ее наличии
+#       2. При создании новой базы автоматически добавлять расширение 'sqlite3'
 
 def create_main_window():
     global root
@@ -14,7 +16,16 @@ def load_database():
     global db
     if file_name:
         db = DataBase(file_name)
-        root.update_after_load_database()
+        root.update_after_load_database("База успешно загружена!")
+
+
+def create_new_database():
+    file_name = fd.asksaveasfilename(filetypes=(("Database", "*.sqlite3"),))
+    global db
+    if file_name:
+        db = DataBase(file_name)
+        db.create_database()
+        root.update_after_load_database("База успешно создана!")
 
 
 def show_welcome():
@@ -28,12 +39,17 @@ def show_welcome():
     root.main_text_field_off()
 
 
-def show_catalog():
+def show_catalog(filter_records=None):
     """
     Отображение каталога записей в библиотеке - кнопка 'Каталог'
     """
     root.main_text_field_on()
-    for item in db.read_all_from_db():
+    if filter_records is None:
+        records = db.read_all_from_db()
+    else:
+        records = filter_records
+
+    for item in records:
         root.main_text_field_insert(f'id{item[0]} - "{item[1]}", {item[2]}, {item[3]}, {item[4]} год, {item[5]} шт.\n')
     root.main_text_field_off()
 
@@ -59,13 +75,18 @@ def edit_record():
     PopUpWindow(root, 520, 280).pop_up_update_record(db)
 
 
-def biblio_close():
+def find_record():
+    """
+    Отображение доп. окна для поиска записей в библиотеке - кнопка "Поиск"
+    """
+    PopUpWindow(root, 480, 200).pop_up_find_record(root, db)
+
+
+def biblio_close(db=None):
     """
     Закрытие основного окна программы
     """
-    try:
-        if db:
-            db.cursor.close()
-    finally:
-        root.destroy()
+    if db is not None:
+        db.cursor.close()
+    root.destroy()
 

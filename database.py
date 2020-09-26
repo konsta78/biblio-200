@@ -11,6 +11,21 @@ class DataBase:
         self.database_connect = sqlite3.connect(self.database)
         self.cursor = self.database_connect.cursor()
 
+    def create_database(self):
+        """
+        Создание новой базы данных
+        """
+        self.cursor.execute("""
+            CREATE TABLE books(
+            id integer PRIMARY KEY AUTOINCREMENT,
+            name text NOT NULL, 
+            author text NOT NULL, 
+            genre text NOT NULL,
+            year integer,
+            amount integer
+            )""")
+        self.database_connect.commit()
+
     def read_all_from_db(self):
         """
         Получение всех данных из базы
@@ -88,6 +103,14 @@ class DataBase:
             '''UPDATE books SET name=?, author=?, genre=?, year=? 
             WHERE id=?''', (name_rec, author_rec, genre_rec, year_rec, id_rec))
         self.database_connect.commit()
+
+    def select_records_by_filter(self, name_rec, author_rec, genre_rec):
+
+        self.cursor.execute("""
+            SELECT * FROM books 
+            WHERE name=? OR author=? OR genre=?""", (name_rec, author_rec, genre_rec))
+        data = self.cursor.fetchall()
+        return data
 
     def database_close(self):
         self.cursor.close()

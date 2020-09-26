@@ -43,11 +43,14 @@ class Root(Tk):
                         font='arial 16', width=12, command=f.edit_record, state='disabled')
         self.but_edit.pack()
         self.but_find = Button(self.frame_menu, text="Поиск", activeforeground="blue",
-                        font='arial 16', width=12, state='disabled')
+                        font='arial 16', width=12, command=f.find_record, state='disabled')
         self.but_find.pack()
         self.but_save = Button(self.frame_menu, text="Сохранить", activeforeground="blue",
                         font='arial 16', width=12, state='disabled')
         self.but_save.pack()
+        self.but_create = Button(self.frame_menu, text="Создать", command=f.create_new_database, activeforeground="blue",
+                               font='arial 16', width=12, state='normal')
+        self.but_create.pack()
         self.but_load = Button(self.frame_menu, text="Загрузить", command=f.load_database, activeforeground="blue",
                         font='arial 16', width=12, state='normal')
         self.but_load.pack()
@@ -67,7 +70,7 @@ class Root(Tk):
     def main_text_field_insert(self, data_text):
         self.main_text_field.insert('end', data_text)
 
-    def update_after_load_database(self):
+    def update_after_load_database(self, text):
         self.but_start.configure(state='normal')
         self.but_catalog.configure(state='normal')
         self.but_add.configure(state='normal')
@@ -76,7 +79,7 @@ class Root(Tk):
         self.but_find.configure(state='normal')
         self.but_save.configure(state='normal')
         self.main_text_field_on()
-        self.main_text_field_insert("База успешно загружена!")
+        self.main_text_field_insert(text)
         self.main_text_field_off()
 
 
@@ -197,6 +200,42 @@ class PopUpWindow(Toplevel):
         id_edit.grid(row=6, column=1, sticky=W)
         btn1 = Button(self, text="Сохранить", activeforeground="blue", command=on_click,
                       font='arial 16', width=10, state='disabled')
+        btn1.grid(row=7, column=0, padx=10, pady=5)
+        Button(self, text="Закрыть", activeforeground="blue", command=self.destroy,
+                      font='arial 16', width=10).grid(row=7, column=1, sticky=E, pady=5)
+
+    def pop_up_find_record(self, root, db):
+
+        def on_click():
+            """
+            Вывод результатов сортировки записей
+            """
+            filter_records = db.select_records_by_filter(combo_name.get(), combo_author.get(), combo_genre.get())
+            f.show_catalog(filter_records)
+            self.destroy()
+
+        Label(self, text="Поиск по базе данных:",
+                     font='arial 20 bold', pady=10).grid(row=0, columnspan=2, sticky=W + E)
+        Label(self, text="По названию:",
+                     font='arial 14').grid(row=1, column=0, sticky=W, padx=10, pady=2)
+        combo_name = Combobox(self, width=35, state='readonly',
+                              values=[f"{item[1]}" for item in db.read_all_from_db()])
+        combo_name.grid(row=1, column=1)
+
+        Label(self, text="По автору:",
+                     font='arial 14').grid(row=2, column=0, sticky=W, padx=10, pady=2)
+        combo_author = Combobox(self, width=35, state='readonly',
+                                values=[f"{item[0]}" for item in db.read_from_database_by_filter("author")])
+        combo_author.grid(row=2, column=1)
+
+        Label(self, text="По жанру:",
+                     font='arial 14').grid(row=3, column=0, sticky=W, padx=10, pady=2)
+        combo_genre = Combobox(self, width=35, state='readonly',
+                               values=[f"{item[0]}" for item in db.read_from_database_by_filter("genre")])
+        combo_genre.grid(row=3, column=1)
+
+        btn1 = Button(self, text="Показать", activeforeground="blue",
+                      font='arial 16', width=10, command=on_click)
         btn1.grid(row=7, column=0, padx=10, pady=5)
         Button(self, text="Закрыть", activeforeground="blue", command=self.destroy,
                       font='arial 16', width=10).grid(row=7, column=1, sticky=E, pady=5)
