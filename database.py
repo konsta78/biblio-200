@@ -29,7 +29,6 @@ class DataBase:
     def read_all_from_db(self):
         """
         Получение всех данных из базы
-        :param database: база данных
         :return: список кортежей записей
         """
         self.cursor.execute("""
@@ -105,7 +104,12 @@ class DataBase:
         self.database_connect.commit()
 
     def select_records_by_filter(self, name_rec, author_rec, genre_rec):
-
+        """
+        Отображение записей по фильтрам
+        :param name_rec: название книги
+        :param author_rec: автор
+        :param genre_rec: жанр
+        """
         self.cursor.execute("""
             SELECT * FROM books 
             WHERE name=? OR author=? OR genre=?""", (name_rec, author_rec, genre_rec))

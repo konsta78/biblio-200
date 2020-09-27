@@ -1,31 +1,60 @@
+"""
+Модуль с основными функциями для работы с библиотекой
+"""
+
 from tkinter import filedialog as fd
 from database import DataBase
 from graphic import Root, PopUpWindow
+import json
 
 # TODO: 1. При создании новой базы данных необходимо сначала закрыть существующую базу при ее наличии
-#       2. При создании новой базы автоматически добавлять расширение 'sqlite3'
+#       2. При создании новой базы автоматически добавлять расширение 'sqlite3' (не работает в Windows)
+#       3. В функции load_database и create_new_database задвоение глобальной переменной 'db' - плохо
+
 
 def create_main_window():
+    """
+    Создание основного окна программы
+    """
     global root
     root = Root()
     root.mainloop()
 
 
 def load_database():
+    """
+    Загрузка базы данных из файла '.sqlite3' - кнопка 'Загрузить'
+    """
     file_name = fd.askopenfilename(filetypes=(("Database", "*.sqlite3"),))
     global db
     if file_name:
         db = DataBase(file_name)
-        root.update_after_load_database("База успешно загружена!")
+        root.update_main_text_field("База успешно загружена!")
+
+
+def save_database():
+    """
+    Сохранение базы данных в файл '.json' - кнопка 'Сохранить'
+    """
+    file_name = fd.asksaveasfilename(filetypes=(("Database", "*.json"),))
+    if file_name:
+        with open(file_name, 'w', encoding='utf-8') as f:
+            for item in db.read_all_from_db():
+                json.dump(item, f, ensure_ascii=False, indent=4)
+            f.close()
+        root.update_main_text_field(f"База успешно сохранена в файле {file_name}!")
 
 
 def create_new_database():
+    """
+    Создание новой базы данных - кнопка 'Создать'
+    """
     file_name = fd.asksaveasfilename(filetypes=(("Database", "*.sqlite3"),))
     global db
     if file_name:
         db = DataBase(file_name)
         db.create_database()
-        root.update_after_load_database("База успешно создана!")
+        root.update_main_text_field("База успешно создана!")
 
 
 def show_welcome():

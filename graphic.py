@@ -12,6 +12,9 @@ HEIGHT = 500
 
 
 class Root(Tk):
+    """
+    Основное окно программы
+    """
     def __init__(self):
         super().__init__()
         self.title("Библиотека (реализована на классах)")
@@ -46,7 +49,7 @@ class Root(Tk):
                         font='arial 16', width=12, command=f.find_record, state='disabled')
         self.but_find.pack()
         self.but_save = Button(self.frame_menu, text="Сохранить", activeforeground="blue",
-                        font='arial 16', width=12, state='disabled')
+                        font='arial 16', width=12, command=f.save_database, state='disabled')
         self.but_save.pack()
         self.but_create = Button(self.frame_menu, text="Создать", command=f.create_new_database, activeforeground="blue",
                                font='arial 16', width=12, state='normal')
@@ -61,16 +64,28 @@ class Root(Tk):
         self.main_text_field.pack()
 
     def main_text_field_on(self):
+        """
+        Очистка поля для отображения информации
+        """
         self.main_text_field.configure(state='normal')
         self.main_text_field.delete(1.0, 'end')
 
     def main_text_field_off(self):
+        """
+        Запрет на редактирование поля для отображения информации
+        """
         self.main_text_field.configure(state='disabled')
 
     def main_text_field_insert(self, data_text):
+        """
+        Отображение информации в основном поле
+        """
         self.main_text_field.insert('end', data_text)
 
-    def update_after_load_database(self, text):
+    def update_main_text_field(self, text):
+        """
+        Разблокировка кнопок работы с базой данных после ее загрузки или создания
+        """
         self.but_start.configure(state='normal')
         self.but_catalog.configure(state='normal')
         self.but_add.configure(state='normal')
@@ -84,6 +99,9 @@ class Root(Tk):
 
 
 class PopUpWindow(Toplevel):
+    """
+    Всплывающие окна - общие параметры
+    """
     def __init__(self, root, width, height):
         super().__init__()
         self.grab_set()
@@ -93,7 +111,9 @@ class PopUpWindow(Toplevel):
         self.overrideredirect(True)
 
     def pop_up_add_record(self, db):
-
+        """
+        Окно - добавление новой записи
+        """
         def on_click():
             db.add_new_record(new_name.get(), new_author.get(), new_genre.get(), new_year.get(), 5)
             self.destroy()
@@ -119,11 +139,10 @@ class PopUpWindow(Toplevel):
                       font='arial 16', width=10).grid(row=5, column=1, sticky=E, pady=2)
 
     def pop_up_delete_record(self, db):
-
+        """
+        Окно - удаление записи
+        """
         def on_click():
-            """
-            Закрытие доп. окна и удаление выбранной записи из библиотеки
-            """
             pattern = r"\d+"
             match = re.search(pattern, combo.get())
             db.delete_from_database(match[0])
@@ -144,11 +163,10 @@ class PopUpWindow(Toplevel):
                       font='arial 16', width=10).grid(row=5, column=1, sticky=E, pady=5)
 
     def pop_up_update_record(self, db):
-
+        """
+        Окно - редактирование записи
+        """
         def on_click():
-            """
-            Закрытие доп. окна и обновление записи в библиотеке
-            """
             db.update_record_in_database(int(id_edit.get()), name_edit.get(), author_edit.get(),
                           genre_edit.get(), year_edit.get())
             self.destroy()
@@ -205,11 +223,10 @@ class PopUpWindow(Toplevel):
                       font='arial 16', width=10).grid(row=7, column=1, sticky=E, pady=5)
 
     def pop_up_find_record(self, root, db):
-
+        """
+        Окно - поиск записей по параметрам
+        """
         def on_click():
-            """
-            Вывод результатов сортировки записей
-            """
             filter_records = db.select_records_by_filter(combo_name.get(), combo_author.get(), combo_genre.get())
             f.show_catalog(filter_records)
             self.destroy()
