@@ -5,7 +5,8 @@
 from tkinter import filedialog as fd
 from database import DataBase
 from graphic import Root, PopUpWindow
-import json
+import driver
+import os
 
 # TODO: 1. При создании новой базы данных необходимо сначала закрыть существующую базу при ее наличии
 #       2. При создании новой базы автоматически добавлять расширение 'sqlite3' (не работает в Windows)
@@ -36,12 +37,15 @@ def save_database():
     """
     Сохранение базы данных в файл '.json' - кнопка 'Сохранить'
     """
-    file_name = fd.asksaveasfilename(filetypes=(("Database", "*.json"),))
+    file_name = fd.asksaveasfilename(filetypes=(("Json files", '*.json'), ('Text files', '*.txt')))
     if file_name:
-        with open(file_name, 'w', encoding='utf-8') as f:
-            for item in db.read_all_from_db():
-                json.dump(item, f, ensure_ascii=False, indent=4)
-            f.close()
+        file, ext = os.path.splitext(file_name)
+        if ext == '.txt':
+            my_driver = driver.TextDriver(file_name)
+        else:
+            my_driver = driver.JsonDriver(file_name)
+
+        driver.SaveToFile(db, driver=my_driver).save()
         root.update_main_text_field(f"База успешно сохранена в файле {file_name}!")
 
 
