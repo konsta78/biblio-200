@@ -37,7 +37,8 @@ def save_database():
     """
     Сохранение базы данных в файл '.json' - кнопка 'Сохранить'
     """
-    file_name = fd.asksaveasfilename(filetypes=(("Json files", '*.json'), ('Text files', '*.txt')))
+    file_name = fd.asksaveasfilename(filetypes=(("Json files", '*.json'), ('Text files', '*.txt')),
+                                     defaultextension="*.*")
     if file_name:
         file, ext = os.path.splitext(file_name)
         if ext == '.txt':
