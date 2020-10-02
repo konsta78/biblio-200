@@ -20,7 +20,7 @@ class JsonDriver(IBodyDriver):
 
 class TextDriver(IBodyDriver):
     def __init__(self, filename):
-        self.filename = filename + '.txt'
+        self.filename = filename
 
     def save(self, db):
         with open(self.filename, 'w', encoding='utf-8') as f:
