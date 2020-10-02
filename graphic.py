@@ -107,7 +107,9 @@ class PopUpWindow(Toplevel):
         self.grab_set()
         nr_x = root.winfo_rootx() + root.winfo_reqwidth() // 2
         nr_y = root.winfo_rooty() + root.winfo_reqheight() // 2
+        self.transient(root) # для Mac-OS
         self.geometry(f'{width}x{height}+{nr_x - width // 2}+{nr_y - height // 2}')
+        self.lift() # для Mac-OS
         self.overrideredirect(True)
 
     def pop_up_add_record(self, db):
